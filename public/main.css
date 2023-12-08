@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto+Mono:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+
+*{
+    padding: 0.6rem;
+    margin: 0;
+    font-family: 'Roboto Mono', monospace;
+}
+
+body {
+    min-width: 900px;
+    background-image: url("path/to/image.jpg");
+
+}
+
+/* HEADER */
+li{
+    list-style-type: none;
+
+}
+
+/* NAVIGATION */
+.name {
+    font-family: 'Bebas Neue', cursive;
+    color: white;
+    letter-spacing: 0.1rem;
+    font-size: 35px;
+    letter-spacing: 0.1rem;
+    background-color: black;
+    width: 150px;
+    margin-top: 50px;
+}
+
+/* nav ul puts everything as it should */
+nav {
+    display: inline-flex;
+    align-items: center;
+    /* height: 10%; */
+    width: 100%;
+}
+
+nav ul{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding-top: 20px;
+}
+
+/* Nav LINKS */
+.nav-links a{
+    color: black;
+    text-decoration: none;
+    letter-spacing: 2px;
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0 15px;
+    display: flex;
+    justify-content: space-around;
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+}
+
+a{
+  text-decoration: none;
+  display: inline-block;
+}
+
+h1 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 50px;
+}
+h2 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 40px;
+    letter-spacing: 0.1rem;
+}
+
+p {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* body stuff */
+
+.line {
+    border-top: 1px solid black;
+}
+.blurb {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.blurb p {
+    font-size: 19px;
+    line-height: 30px;
+    text-align: justify;
+}
+
+.listings {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 260px 260px 260px;
+    /* line-break: 20px; */
+    margin: auto;
+}
+
+.listings img:hover {
+    opacity: 0.3;
+}
+
+.row {
+    margin-bottom: 40px;
+}
+
+tr {
+    text-transform: capitalize;
+}
+
+.errormessage {
+    color:red;
+}
+
+.includes {
+    margin-left: 30px;
+    color:#2364AA;
+}
+
+/* FORM STUFF */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+}
+  
+.checkbox-group label {
+    margin-right: 30px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+}
+  
+.blurb button[type="submit"] {
+    font-size: 30px;
+    padding: 10px 20px;
+}
+
+/* Warning Label Stuff */
+.warning-banner {
+    background-color: #ffcc00;
+    color: #333;
+    padding: 10px;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+}
+  
+.warning-banner label {
+    margin: 0;
+    display: inline-block;
+    cursor: pointer;
+}
+#warning-checkbox{
+    display: none;
+}
+  /* HELP LINK STAY ONE COLOR*/
+a:visited {
+    color: #141313;
+}
+a:hover{
+    color: #FE9000;
+}
+  
