@@ -28,19 +28,25 @@ module.exports = function (app, appData) {
         //     if (err) {
         //         res.redirect('./'); 
         //     }
-        //     let newData = Object.assign({}, shopData, {availableBooks:result});
+        //     let newData = Object.assign({}, appData, {availableBooks:result});
         //     console.log(newData)
         //     res.render("list.ejs", newData)
         //  });
     });
     // register page
     app.get('/register', function (req,res) {
-        res.render('register.ejs', shopData);                                                                     
+        res.render('register.ejs', appData);                                                                     
     });
     // post-registering..                                                                                             
     app.post('/registered', function (req,res) {
+        bcrypt.hash(plainPassword, saltRounds, function(err, hashedPassword) {
+            // store hashed pwd in database
+        })
         // saving data in database
-        res.send(' Hello '+ req.body.first + ' '+ req.body.last +' you are now registered!  We will send an email to you at ' + req.body.email);                                                                              
+        // res.send(' Hello '+ req.body.first + ' '+ req.body.last +' you are now registered!  We will send an email to you at ' + req.body.email);
+        result = 'Hello '+ req.body.first + ' '+ req.body.last +' you are now registered!  We will send an email to you at ' + req.body.email;
+        result += 'Your password is: '+ req.body.password +' and your hashed password is: '+ hashedPassword;
+        res.send(result);
     }); 
     // sign-in page
     app.get('/sign-in', function(req, res) {

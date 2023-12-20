@@ -21,8 +21,22 @@
         </ul>
     </nav>
     <div class="line"></div>
-        NULL
+    <div class="container">
+        <div class="blurb">
+            <div class="text"><h1>Register for <%=appName%></h1></div>
+            <div class="inside">
+            <!-- insert form here -->
+            <form method="POST" action="/registered">
+                <p>Username: <input id="username" type="text" name="username" placeholder="Enter your username" /></p>
+                <p>Email: <input id="email" type="email" name="email" placeholder="Enter your email" /></p>
+                <p>Password: <input id="pwd" type="password" name="pwd" placeholder="Enter your password" /></p>
+                <input type="submit" value="Register" />
+            </form>            
+            </div>
+        </div>
+
     </div>
+
 </body>
 
 </html>
