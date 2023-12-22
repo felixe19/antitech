@@ -24,18 +24,21 @@
     <div class="container">
         <div class="blurb">
             <div class="text">
-                <h1>Our Story</h1>
+                <h1>Topics</h1>
                 <div class="inside">
                     <p>
                         NULL
                     </p>
                 </div>
                 <div class="text">
-                    <h1>Our Mission Statement</h1>
+                    <h1>Humans</h1>
                     <div class="inside">
-                        <p>
-                            NULL
-                        </p>
+                        # TODO : place in table and show what communites they are members of
+                        <ul>
+                            <% for (let i = 0; i < users.length; i++) { %>
+                                <li><%= users[i].username %></li>
+                            <% } %>
+                        </ul>
                     </div>
 
                 </div>

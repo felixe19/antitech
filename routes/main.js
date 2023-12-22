@@ -8,18 +8,26 @@ module.exports = function (app, appData) {
     });
     //about page
     app.get('/about', function(req, res) {
+        console.log("Currently on: ABOUT page....")
         res.render('about.ejs', appData)
     });
     // community page
     app.get('/community', function(req, res) {
-        res.render('community.ejs', appData)
+        console.log("Currently on: COMMUNITY page....")
+        db.query('SELECT username FROM user', (err, results) => {
+            if (err) throw err;
+            let newData = Object.assign({}, appData, {users:results});    
+            res.render('community.ejs', newData);
+        });
     });
     // library page
     app.get('/library', function(req, res) {
+        console.log("Currently on: LIBRARY page....")
         res.render('library.ejs', appData)
     });
     // TODO: include search and/or filter results page...
     app.get('/list', function(req, res) {
+        console.log("Currently on: LIST page....")
         // code below from bertbooks >> correct it
         // ==================== 
         // let sqlquery = "SELECT * FROM books"; // query database to get all the books
@@ -35,10 +43,12 @@ module.exports = function (app, appData) {
     });
     // register page
     app.get('/register', function (req,res) {
+        console.log("Currently on: REGISTER page....")
         res.render('register.ejs', appData);                                                
     });
     // post-registering..                                                                                             
     app.post('/registered', function (req, res) {
+        console.log("Currently on: REGISTER DISPLAY page....")
         const bcrypt = require('bcrypt');
         const saltRounds = 10;
         const plainPassword = req.body.pwd;
@@ -61,6 +71,7 @@ module.exports = function (app, appData) {
     
     // sign-in page
     app.get('/sign-in', function(req, res) {
+        console.log("Currently on: SIGN-IN page....")
         res.render('sign-in.ejs', appData)
     });
     
