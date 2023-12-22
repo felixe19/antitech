@@ -7,11 +7,6 @@ var express = require('express')
 var ejs = require('ejs')
 var bodyParser = require('body-parser')
 const mysql = require('mysql');
-const bcrypt = require('bcrypt');
-
-// # TODO: double check if this is correct spot to place into
-const saltRounds = 10;
-// const plainPassword = req.body.password;
 
 // Create the express application object
 const app = express()

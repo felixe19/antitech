@@ -39,9 +39,13 @@ module.exports = function (app, appData) {
     });
     // post-registering..                                                                                             
     app.post('/registered', function (req,res) {
+        const bcrypt = require('bcrypt');
+        const saltRounds = 10;
+        const plainPassword = req.body.password;
         bcrypt.hash(plainPassword, saltRounds, function(err, hashedPassword) {
             // store hashed pwd in database
         })
+        
         // saving data in database
         // res.send(' Hello '+ req.body.first + ' '+ req.body.last +' you are now registered!  We will send an email to you at ' + req.body.email);
         result = 'Hello '+ req.body.first + ' '+ req.body.last +' you are now registered!  We will send an email to you at ' + req.body.email;
