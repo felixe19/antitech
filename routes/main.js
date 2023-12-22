@@ -35,23 +35,30 @@ module.exports = function (app, appData) {
     });
     // register page
     app.get('/register', function (req,res) {
-        res.render('register.ejs', appData);                                                                     
+        res.render('register.ejs', appData);                                                
     });
     // post-registering..                                                                                             
-    app.post('/registered', function (req,res) {
+    app.post('/registered', function (req, res) {
         const bcrypt = require('bcrypt');
         const saltRounds = 10;
-        const plainPassword = req.body.password;
-        bcrypt.hash(plainPassword, saltRounds, function(err, hashedPassword) {
-            // store hashed pwd in database
-        })
+        const plainPassword = req.body.pwd;
         
-        // saving data in database
-        // res.send(' Hello '+ req.body.first + ' '+ req.body.last +' you are now registered!  We will send an email to you at ' + req.body.email);
-        result = 'Hello '+ req.body.first + ' '+ req.body.last +' you are now registered!  We will send an email to you at ' + req.body.email;
-        result += 'Your password is: '+ req.body.password +' and your hashed password is: '+ hashedPassword;
-        res.send(result);
-    }); 
+        bcrypt.hash(plainPassword, saltRounds, function(err, hashedPassword) {
+            // WORKING CODE
+            if (err) {
+                // handle error if hashing fails
+                console.error('Error hashing the password:', err);
+                return res.status(500).send('Error hashing the password');
+            }
+            // log the hashed passwords
+            const result = 'Hello ' + req.body.username + ' you are now registered! We will send an email to you at ' + req.body.email;
+            // console.log("hey " + result + ' Your hashed password is: ' + hashedPassword);
+            
+            // send response
+            res.send(result);
+        });
+    });
+    
     // sign-in page
     app.get('/sign-in', function(req, res) {
         res.render('sign-in.ejs', appData)

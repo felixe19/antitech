@@ -3,10 +3,11 @@
 */
 
 // Import the modules we need
-var express = require('express')
-var ejs = require('ejs')
-var bodyParser = require('body-parser')
+var express = require('express');
+var ejs = require('ejs');
+var bodyParser = require('body-parser');
 const mysql = require('mysql');
+const bcrypt = require('bcrypt');
 
 // Create the express application object
 const app = express()
