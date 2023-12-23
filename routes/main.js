@@ -76,7 +76,24 @@ module.exports = function (app, appData) {
         // TODO: compare the sql query
         // SQL QUERY SHOULD BE SOMETHING LIKE... select pwd from user where username/email = ?
         // this will pick the hashed password to compare
-        
+        let sqlquery = 'SELECT pwd FROM user WHERE email = ?';
+        db.query(sqlquery, (err, result) => {
+            // move bcrypt function here
+            
+
+            // move render here
+        });
+
+        bcrypt.compare(req.body.pwd, hashedPassword, function(err, result) {
+            if (err) {
+                // error: comparing passwords > db side
+            } else if (result) {
+                // passwords match: user auth OK !
+            } else {
+                // passwords do not match: user auth FAIL
+            }
+        });
+
         res.render('sign-in.ejs', appData)
     });
     
