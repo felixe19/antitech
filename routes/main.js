@@ -72,6 +72,11 @@ module.exports = function (app, appData) {
     // sign-in page
     app.get('/sign-in', function(req, res) {
         console.log("Currently on: SIGN-IN page....")
+
+        // TODO: compare the sql query
+        // SQL QUERY SHOULD BE SOMETHING LIKE... select pwd from user where username/email = ?
+        // this will pick the hashed password to compare
+        
         res.render('sign-in.ejs', appData)
     });
     
