@@ -44,10 +44,11 @@ module.exports = function (app, appData) {
     // register page
     app.get('/register', function (req,res) {
         console.log("Currently on: REGISTER page....")
-        res.render('register.ejs', appData);                                                
+        res.render('register.ejs', appData);                                            
     });
     // post-registering..                                                                                             
     app.post('/registered', function (req, res) {
+        // TODO: fix! -> is not adding to database
         console.log("Currently on: REGISTER DISPLAY page....")
         const bcrypt = require('bcrypt');
         const saltRounds = 10;
@@ -60,41 +61,67 @@ module.exports = function (app, appData) {
                 console.error('Error hashing the password:', err);
                 return res.status(500).send('Error hashing the password');
             }
-            // log the hashed passwords
-            const result = 'Hello ' + req.body.username + ' you are now registered! We will send an email to you at ' + req.body.email;
-            // console.log("hey " + result + ' Your hashed password is: ' + hashedPassword);
-            
-            // send response
-            res.send(result);
+            // no err: create the user to send to database
+            const new_user = {
+                username: req.body.username,
+                email: req.body.email,
+                pwd: hashedPassword
+            };
+            // insert user
+            db.query('INSERT INTO user SET ?', new_user, (ins_err, ins_res) => {
+                if (ins_err) {
+                    console.log('Error inserting user to database: ', ins_err);
+                    return res.status(500).send('Error registering the user');
+                }
+                // log the hashed passwords
+                const result = 'Hello ' + req.body.username + ' you are now registered!';
+                // send response
+                res.send(result);
+            }); // end db
         });
     });
     
     // sign-in page
     app.get('/sign-in', function(req, res) {
         console.log("Currently on: SIGN-IN page....")
+        res.render('sign-in.ejs', appData);                                            
+    });
+
+    // signed in page
+    app.post('/signed-in', function(req, res) {
 
         // TODO: compare the sql query
         // SQL QUERY SHOULD BE SOMETHING LIKE... select pwd from user where username/email = ?
         // this will pick the hashed password to compare
         let sqlquery = 'SELECT pwd FROM user WHERE email = ?';
         db.query(sqlquery, (err, result) => {
-            // move bcrypt function here
-            
-
-            // move render here
-        });
-
-        bcrypt.compare(req.body.pwd, hashedPassword, function(err, result) {
             if (err) {
-                // error: comparing passwords > db side
-            } else if (result) {
-                // passwords match: user auth OK !
+                // handle error if hashing fails
+                console.error('Internal error:', err);
+                return res.status(500).send('Internal error occurred.');
+            }
+            // result > 0  means that a matchinh password found for that email
+            if (result.length > 0) {
+            // move bcrypt function here
+                bcrypt.compare(req.body.pwd, hashedPassword, function(comp_err, comp_res) {
+                    if (comp_err) {
+                        // error: comparing passwords > db side
+                        console.error('Error comparing passwords:', compareErr);
+                        return res.status(500).send('Error comparing passwords');
+                    } else if (comp_res) {
+                        // passwords match: user auth OK !
+                        res.send('Authentication successful!', result);
+                    } else {
+                        // passwords do not match: user auth FAIL -> 401 auth error
+                        res.staus(401).send('Incorrect password');
+                    }
+                });
             } else {
-                // passwords do not match: user auth FAIL
+                // user not found: 404 error
+                res.status(404).send('User not found for that email!');
             }
         });
-
-        res.render('sign-in.ejs', appData)
+        // res.render('sign-in.ejs', appData)
     });
     
 }
