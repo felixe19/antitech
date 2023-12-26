@@ -24,9 +24,34 @@
     <div class="line"></div>
     <form method="POST" action="/signed-in">
         <p>Email: <input id="email" type="text" name="email" placeholder="Enter your email" /></p>
+        <span id="emailError" style="color: red;"></span>
         <p>Password: <input id="password" type="password" name="pwd" placeholder="Enter your password" /></p>
+        <span id="passwordError" style="color: red;"></span>
+        <br>
         <input type="submit" value="Sign In" />
     </form>
+    <script>
+        document.querySelector('form').addEventListener('submit', function(event) {
+            const email = document.getElementById('email').value;
+            const emailError = document.getElementById('emailError');
+            const password = document.getElementById('password').value;
+            const passwordError = document.getElementById('passwordError');
+
+            if (email.trim() === '') {
+                emailError.textContent = 'Email field cannot be empty';
+                event.preventDefault(); // stops user from submitting blank email
+            } else {
+                emailError.textContent = '';
+            }
+
+            if (password.trim() === '') {
+                passwordError.textContent = 'Password field cannot be empty';
+                event.preventDefault(); // stops user from submitting blank password
+            } else {
+                passwordError.textContent = '';
+            }
+        });
+    </script>
     </div>
 </body>
 

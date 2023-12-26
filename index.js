@@ -10,6 +10,7 @@ const mysql = require('mysql');
 const bcrypt = require('bcrypt');
 var session = require ('express-session');
 var validator = require ('express-validator');
+const expressSanitizer = require('express-sanitizer');
 
 // Create the express application object
 const app = express()
@@ -20,13 +21,15 @@ app.use(bodyParser.urlencoded({
 
 // Create a session
 app.use(session({
-        secret: 'somerandomstuff',
-        resave: false,
-        saveUninitialized: false,
-        cookie: {
-            expires: 600000
-        }
-    }));
+    secret: 'somerandomstuff',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        expires: 600000
+    }
+}));
+
+app.use(expressSanitizer());
 
 // Define the database connection
 const db = mysql.createConnection({

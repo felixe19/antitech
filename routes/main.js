@@ -1,3 +1,4 @@
+// TODO: BLOG PAGE MISSING HAHAHAH
 module.exports = function (app, appData) {
     // bcrypt to avoid missing or undefined err
     const bcrypt = require('bcrypt');
@@ -57,13 +58,16 @@ module.exports = function (app, appData) {
     // post-registering..                                                                                            
     app.post('/registered', [
         check('email').isEmail().withMessage('Email must be valid.'),
-        check('pwd').isLength({min: 8}).withMessage('Password must be at least 8 characters long!').matches(/\d/).withMessage('Password must contain atleast one digit...')
+        check('pwd').isLength({min: 8}).withMessage('Password must be at least 8 characters long!').matches(/\d/).withMessage('Password must contain atleast one digit...'),
+        check('username').notEmpty().withMessage('Username cannot be empty.')
         ], function (req, res) {
         // --- begin post ---
         console.log("Currently on: REGISTER DISPLAY page....")
         const saltRounds = 10;
         const plainPassword = req.body.pwd;
         const errors = validationResult(req);
+        req.sanitize(req.body.username);
+        req.sanitize(req.body.email);
         if (!errors.isEmpty()) {
             res.redirect('./register');
         } else {        
@@ -100,40 +104,48 @@ module.exports = function (app, appData) {
         res.render('sign-in.ejs', appData);            
     });
     // signed in page
-    app.post('/signed-in', function(req, res) {
+    app.post('/signed-in', [
+        check('email').isEmail().withMessage('Email must be valid.'),
+        check('pwd').notEmpty().withMessage('Username cannot be empty.')
+    ],function(req, res) {
         console.log("Currently doing SIGN-IN OPERATIONS (/signed-in)....");
         let sqlquery = 'SELECT pwd FROM user WHERE email = ?';
-        db.query(sqlquery, [req.body.email], (err, result) => {
-            if (err) {
-                // handle error if hashing fails
-                console.error('Internal error:', err);
-                return res.status(500).send('Internal error occurred.');
-            }
-            // result > 0  means that a matchinh password found for that email
-            if (result.length > 0) {
-            // assign the hashed password to address error...
-            const hashedPassword = result[0].pwd;
-            // move bcrypt function here
-                bcrypt.compare(req.body.pwd, hashedPassword, function(comp_err, comp_res) {
-                    if (comp_err) {
-                        // error: comparing passwords > db side
-                        console.error('Error comparing passwords:', compareErr);
-                        return res.status(500).send('Error comparing passwords');
-                    } else if (comp_res) {
-                        // passwords match: user auth OK !
-                        req.session.userId = req.body.email;
-                        res.redirect('./');
-                        // res.send({message:'Authentication successful!', result: result});
-                    } else {
-                        // passwords do not match: user auth FAIL -> 401 auth error
-                        res.staus(401).send('Incorrect password');
-                    }
-                });
-            } else {
-                // user not found: 404 error
-                res.status(404).send('User not found for that email!');
-            }
-        });
+        req.sanitize(req.body.email);
+        if (!errors.isEmpty()) {
+            res.redirect('./register');
+        } else {
+            db.query(sqlquery, [req.body.email], (err, result) => {
+                if (err) {
+                    // handle error if hashing fails
+                    console.error('Internal error:', err);
+                    return res.status(500).send('Internal error occurred.');
+                }
+                // result > 0  means that a matchinh password found for that email
+                if (result.length > 0) {
+                // assign the hashed password to address error...
+                const hashedPassword = result[0].pwd;
+                // move bcrypt function here
+                    bcrypt.compare(req.body.pwd, hashedPassword, function(comp_err, comp_res) {
+                        if (comp_err) {
+                            // error: comparing passwords > db side
+                            console.error('Error comparing passwords:', compareErr);
+                            return res.status(500).send('Error comparing passwords');
+                        } else if (comp_res) {
+                            // passwords match: user auth OK !
+                            req.session.userId = req.body.email;
+                            res.redirect('./');
+                            // res.send({message:'Authentication successful!', result: result});
+                        } else {
+                            // passwords do not match: user auth FAIL -> 401 auth error
+                            res.staus(401).send('Incorrect password');
+                        }
+                    });
+                } else {
+                    // user not found: 404 error
+                    res.status(404).send('User not found for that email!');
+                }
+            });
+        }
     });
     // signout page
     app.get('/sign-out', redirectLogin, (req,res) => {
