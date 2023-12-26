@@ -30,9 +30,25 @@
             <form method="POST" action="/registered">
                 <p>Username: <input id="username" type="text" name="username" placeholder="Enter your username" /></p>
                 <p>Email: <input id="email" type="email" name="email" placeholder="Enter your email" /></p>
-                <p>Password: <input id="password" type="password" name="pwd" placeholder="Enter your password" /></p>
+                <p>Password: <input id="password" type="password" name="pwd" oninput="checkPassword()" placeholder="Enter your password" /></p>
+                <span id="passwordError" style="color: red;"></span><br>
                 <input type="submit" value="Register" />
-            </form>            
+            </form>
+            <!-- script to display error messages in real time: proper password -->
+            <script>
+                function checkPassword() {
+                    const password = document.getElementById('password').value;
+                    const passwordError = document.getElementById('passwordError');
+            
+                    if (password.length < 8) {
+                        passwordError.textContent = 'Password must be at least 8 characters';
+                    } else if (!/\d/.test(password)) {
+                        passwordError.textContent = 'Password must contain at least one digit';
+                    } else {
+                        passwordError.textContent = '';
+                    }
+                }
+            </script>
             </div>
         </div>
 

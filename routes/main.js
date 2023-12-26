@@ -1,4 +1,5 @@
 module.exports = function (app, appData) {
+    // bcrypt to avoid missing or undefined err
     const bcrypt = require('bcrypt');
     // redirection after authentication
     const redirectLogin = (req, res, next) => {
@@ -6,9 +7,11 @@ module.exports = function (app, appData) {
             res.redirect('./sign-in')
         } else { next (); }
     }
+    // valudation
+    const { check, validationResult } = require('express-validator');
 
     // handle routes
-
+    // ==============
     // home page : index page
     app.get('/', function (req, res) {
         console.log("Currently on: Index page....")
@@ -52,37 +55,44 @@ module.exports = function (app, appData) {
         res.render('register.ejs', appData);                                            
     });
     // post-registering..                                                                                            
-    app.post('/registered', function (req, res) {
+    app.post('/registered', [
+        check('email').isEmail().withMessage('Email must be valid.'),
+        check('pwd').isLength({min: 8}).withMessage('Password must be at least 8 characters long!').matches(/\d/).withMessage('Password must contain atleast one digit...')
+        ], function (req, res) {
+        // --- begin post ---
         console.log("Currently on: REGISTER DISPLAY page....")
-        // const bcrypt = require('bcrypt');
         const saltRounds = 10;
         const plainPassword = req.body.pwd;
-        
-        bcrypt.hash(plainPassword, saltRounds, function(err, hashedPassword) {
-            // WORKING CODE
-            if (err) {
-                // handle error if hashing fails
-                console.error('Error hashing the password:', err);
-                return res.status(500).send('Error hashing the password');
-            }
-            // no err: create the user to send to database
-            const new_user = {
-                username: req.body.username,
-                email: req.body.email,
-                pwd: hashedPassword
-            };
-            // insert user
-            db.query('INSERT INTO user SET ?', new_user, (ins_err, ins_res) => {
-                if (ins_err) {
-                    console.log('Error inserting user to database: ', ins_err);
-                    return res.status(500).send('Error registering the user');
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.redirect('./register');
+        } else {        
+            bcrypt.hash(plainPassword, saltRounds, function(err, hashedPassword) {
+                // WORKING CODE
+                if (err) {
+                    // handle error if hashing fails
+                    console.error('Error hashing the password:', err);
+                    return res.status(500).send('Error hashing the password');
                 }
-                // log the hashed passwords
-                const result = 'Hello ' + req.body.username + ' you are now registered!';
-                // send response
-                res.send(result);
-            }); // end db
-        });
+                // no err: create the user to send to database
+                const new_user = {
+                    username: req.body.username,
+                    email: req.body.email,
+                    pwd: hashedPassword
+                };
+                // insert user
+                db.query('INSERT INTO user SET ?', new_user, (ins_err, ins_res) => {
+                    if (ins_err) {
+                        console.log('Error inserting user to database: ', ins_err);
+                        return res.status(500).send('Error registering the user');
+                    }
+                    // log the hashed passwords
+                    const result = 'Hello ' + req.body.username + ' you are now registered! + <a href='+'./'+'>Home</a>';
+                    // send response
+                    res.send(result);
+                }); // end db
+            });
+        }
     });
     // sign-in page
     app.get('/sign-in', function(req, res) {
