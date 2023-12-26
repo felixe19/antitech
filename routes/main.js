@@ -1,4 +1,12 @@
 module.exports = function (app, appData) {
+    const bcrypt = require('bcrypt');
+    // redirection after authentication
+    const redirectLogin = (req, res, next) => {
+        if (!req.session.userId ) {
+            res.redirect('./sign-in')
+        } else { next (); }
+    }
+
     // handle routes
 
     // home page : index page
@@ -26,31 +34,27 @@ module.exports = function (app, appData) {
         res.render('library.ejs', appData)
     });
     // TODO: include search and/or filter results page...
-    app.get('/list', function(req, res) {
+    app.get('/list', redirectLogin, function(req, res) {
         console.log("Currently on: LIST page....")
-        // code below from bertbooks >> correct it
-        // ==================== 
-        // let sqlquery = "SELECT * FROM books"; // query database to get all the books
-        // // execute sql query
-        // db.query(sqlquery, (err, result) => {
-        //     if (err) {
-        //         res.redirect('./'); 
-        //     }
-        //     let newData = Object.assign({}, appData, {availableBooks:result});
-        //     console.log(newData)
-        //     res.render("list.ejs", newData)
-        //  });
+        db.query('SELECT username FROM user', (err, results) => {
+            if (err)
+            {
+                throw err;
+                res.redirect('./');
+            };
+            let newData = Object.assign({}, appData, {users:results});    
+            res.render('community.ejs', newData);
+        });
     });
     // register page
     app.get('/register', function (req,res) {
         console.log("Currently on: REGISTER page....")
         res.render('register.ejs', appData);                                            
     });
-    // post-registering..                                                                                             
+    // post-registering..                                                                                            
     app.post('/registered', function (req, res) {
-        // TODO: fix! -> is not adding to database
         console.log("Currently on: REGISTER DISPLAY page....")
-        const bcrypt = require('bcrypt');
+        // const bcrypt = require('bcrypt');
         const saltRounds = 10;
         const plainPassword = req.body.pwd;
         
@@ -80,21 +84,16 @@ module.exports = function (app, appData) {
             }); // end db
         });
     });
-    
     // sign-in page
     app.get('/sign-in', function(req, res) {
         console.log("Currently on: SIGN-IN page....")
-        res.render('sign-in.ejs', appData);                                            
+        res.render('sign-in.ejs', appData);            
     });
-
     // signed in page
     app.post('/signed-in', function(req, res) {
-
-        // TODO: compare the sql query
-        // SQL QUERY SHOULD BE SOMETHING LIKE... select pwd from user where username/email = ?
-        // this will pick the hashed password to compare
+        console.log("Currently doing SIGN-IN OPERATIONS (/signed-in)....");
         let sqlquery = 'SELECT pwd FROM user WHERE email = ?';
-        db.query(sqlquery, (err, result) => {
+        db.query(sqlquery, [req.body.email], (err, result) => {
             if (err) {
                 // handle error if hashing fails
                 console.error('Internal error:', err);
@@ -102,6 +101,8 @@ module.exports = function (app, appData) {
             }
             // result > 0  means that a matchinh password found for that email
             if (result.length > 0) {
+            // assign the hashed password to address error...
+            const hashedPassword = result[0].pwd;
             // move bcrypt function here
                 bcrypt.compare(req.body.pwd, hashedPassword, function(comp_err, comp_res) {
                     if (comp_err) {
@@ -110,7 +111,9 @@ module.exports = function (app, appData) {
                         return res.status(500).send('Error comparing passwords');
                     } else if (comp_res) {
                         // passwords match: user auth OK !
-                        res.send('Authentication successful!', result);
+                        req.session.userId = req.body.email;
+                        res.redirect('./');
+                        // res.send({message:'Authentication successful!', result: result});
                     } else {
                         // passwords do not match: user auth FAIL -> 401 auth error
                         res.staus(401).send('Incorrect password');
@@ -121,7 +124,15 @@ module.exports = function (app, appData) {
                 res.status(404).send('User not found for that email!');
             }
         });
-        // res.render('sign-in.ejs', appData)
+    });
+    // signout page
+    app.get('/sign-out', redirectLogin, (req,res) => {
+        req.session.destroy(err => {
+            if (err) {
+                return res.redirect('./')
+            }
+            res.send('you are now logged out. <a href='+'./'+'>Home</a>');
+        })
     });
     
 }

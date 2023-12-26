@@ -21,8 +21,18 @@
         </ul>
     </nav>
     <div class="line"></div>
-        NULL
-    </div>
+    <div class="text">
+        <h1>Humans</h1>
+        <div class="inside">
+            # TODO : place in table and show what communites they are members of
+            <ul>
+                <% for (let i = 0; i < users.length; i++) { %>
+                    <li><%= users[i].username %></li>
+                <% } %>
+            </ul>
+        </div>
+
+    </div>    
 </body>
 
 </html>

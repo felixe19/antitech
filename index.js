@@ -8,13 +8,24 @@ var ejs = require('ejs');
 var bodyParser = require('body-parser');
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
+var session = require ('express-session');
 
 // Create the express application object
 const app = express()
 const port = 8000
 app.use(bodyParser.urlencoded({
     extended: true
-}))
+}));
+
+// Create a session
+app.use(session({
+        secret: 'somerandomstuff',
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            expires: 600000
+        }
+    }));
 
 // Define the database connection
 const db = mysql.createConnection({
