@@ -82,6 +82,7 @@ module.exports = function (app, appData) {
         const errors = validationResult(req);
         req.sanitize(req.body.username);
         req.sanitize(req.body.email);
+        req.sanitize(req.body.bio);
         if (!errors.isEmpty()) {
             res.redirect('./register');
         } else {        
@@ -96,7 +97,8 @@ module.exports = function (app, appData) {
                 const new_user = {
                     username: req.body.username,
                     email: req.body.email,
-                    pwd: hashedPassword
+                    pwd: hashedPassword,
+                    bio: req.body.bio
                 };
                 // insert user
                 db.query('INSERT INTO user SET ?', new_user, (ins_err, ins_res) => {
