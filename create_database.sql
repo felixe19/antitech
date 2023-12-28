@@ -19,6 +19,7 @@ DROP TABLE IF EXISTS post;
 DROP TABLE IF EXISTS community;
 
 # create the tables
+---------------------
 
 # user table
 CREATE TABLE user (
@@ -40,6 +41,33 @@ CREATE TABLE book (
     isAvailable BOOLEAN
 );
 
+# comminity table
+CREATE TABLE community (
+    communityID INT PRIMARY KEY AUTO_INCREMENT,
+    comName VARCHAR(255) NOT NULL,
+    descript TEXT
+);
+
+# blog table
+CREATE TABLE blog (
+    postID INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    author INT, -- userID
+    communityID INT,
+    datePosted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author) REFERENCES user(userID),
+    FOREIGN KEY (communityID) REFERENCES community(communityID)
+);
+
+# many to many : users in communities
+CREATE TABLE communityMembership (
+    userID INT,
+    communityID INT,
+    membershipDate DATE,
+    FOREIGN KEY (userID) REFERENCES user(userID),
+    FOREIGN KEY (communityID) REFERENCES community(communityID)
+);
 
 # basic values - TODO : ADD INFO > use full table
 INSERT INTO book (title, author)
