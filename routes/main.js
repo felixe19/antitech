@@ -23,6 +23,11 @@ module.exports = function (app, appData) {
         console.log("Currently on: ABOUT page....")
         res.render('about.ejs', appData)
     });
+    // blog
+    app.get('/blog', function (req, res) {
+        console.log("Currently on: BLOG page....")
+        res.render('blog.ejs', appData)
+    });
     // community page
     app.get('/community', function(req, res) {
         console.log("Currently on: COMMUNITY page....")
@@ -35,7 +40,16 @@ module.exports = function (app, appData) {
     // library page
     app.get('/library', function(req, res) {
         console.log("Currently on: LIBRARY page....")
-        res.render('library.ejs', appData)
+        let sqlquery = 'SELECT * FROM book';
+        db.query(sqlquery, (err, results) => {
+            if (err) {
+                console.error('Internal error:', err);
+                return res.status(500).send('Internal error occurred.');
+            }
+            console.log('Query results:', results);
+            let newData = Object.assign({}, appData, {book:results});  
+            res.render('library.ejs', newData);
+        });
     });
     // TODO: include search and/or filter results page...
     app.get('/list', redirectLogin, function(req, res) {
@@ -46,7 +60,7 @@ module.exports = function (app, appData) {
                 throw err;
                 res.redirect('./');
             };
-            let newData = Object.assign({}, appData, {users:results});    
+            let newData = Object.assign({}, appData, {users:results});  
             res.render('community.ejs', newData);
         });
     });

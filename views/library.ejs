@@ -25,20 +25,26 @@
     <div class="container">
         <div class="blurb">
             <div class="text">
-                <h1>Our Story</h1>
+                <h1>Books</h1>
                 <div class="inside">
-                    <p>
-                        NULL
-                    </p>
-                </div>
-                <div class="text">
-                    <h1>Our Mission Statement</h1>
-                    <div class="inside">
-                        <p>
-                            NULL
-                        </p>
-                    </div>
-
+                    <table>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <!-- <th>Description</th> -->
+                            <th>Genre</th>
+                            <th>Availability</th>
+                        </tr>
+                        <% book.forEach(function(book) { %>
+                            <tr>
+                                <td><%= book.title %></td>
+                                <td><%= book.author %></td>
+                                <!-- <td><%= book.description %></td> -->
+                                <td><%= book.genre %></td>
+                                <td><%= book.availability ? 'Available' : 'Not Available' %></td>
+                            </tr>
+                        <% }); %>
+                    </table>
                 </div>
             </div>
         </div>

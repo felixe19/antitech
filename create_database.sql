@@ -19,7 +19,6 @@ DROP TABLE IF EXISTS post;
 DROP TABLE IF EXISTS community;
 
 # create the tables
----------------------
 
 # user table
 CREATE TABLE user (
@@ -34,10 +33,10 @@ CREATE TABLE user (
 # book / library table
 CREATE TABLE book (
     bookID INT PRIMARY KEY AUTO_INCREMENT,
-    title VARCHAR(100) NOT NULL,
+    title VARCHAR(150) NOT NULL,
     author VARCHAR(100) NOT NULL,
     descript TEXT,
-    genre VARCHAR(50),
+    genre VARCHAR(100),
     isAvailable BOOLEAN
 );
 
