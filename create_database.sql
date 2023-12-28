@@ -69,18 +69,36 @@ CREATE TABLE communityMembership (
     FOREIGN KEY (communityID) REFERENCES community(communityID)
 );
 
-# basic values - TODO : ADD INFO > use full table
-INSERT INTO book (title, author)
+# basic values - TODO : ADD INFO > use full table -- DONE!
+INSERT INTO book (title, author, descript, genre, isAvailable)
 VALUES
-    ('Abolish Silicon Valley: How to Liberate Technology from Capitalism', 'Wendy Liu'),
-    ('Algorithms of Oppression: How Search Engines Reinforce Racism', 'Safiya Umoja Noble'),
-    ('Do Androids Dream of Electric Cars?: Public Transit in the Age of Google, Uber, and Elon Musk', 'James Wilt'),
-    ('Too Smart: How Digital Capitalism is Extracting Data, Controlling Our Lives, and Taking Over the World', 'Jathan Sadowski'),
-    ('Bit Tyrants: The Political Economy of Silicon Valley', 'Rob Larson'),
-    ('Capitalism, Technology, Labor: Socialist Register Reader Vol 2 (Socialist Register Reader, 2)', 'Greg Albo'),
-    ('Race After Technology: Abolitionist Tools for the New Jim Code', 'Ruha Banjamin'),
-    ('Weapons of Math Destruction: How Big Data Increases Inequality and Threatens Democracy', 'Cathy O''Neil'),
-    ('Automating Inequality: How High-Tech Tools Profile, Police, and Punish the Poor', 'Virginia Eubanks');
+    ('Abolish Silicon Valley: How to Liberate Technology from Capitalism', 'Wendy Liu',
+        'Former insider turned critic Wendy Liu busts the myths of the tech industry, and offers a galvanising argument for why and how we must reclaim technologys potential for the public good.',
+        'bildungsroman biography', TRUE),
+    ('Algorithms of Oppression: How Search Engines Reinforce Racism', 'Safiya Umoja Noble',
+        'A revealing look at how negative biases against women of color are embedded in search engine results and algorithms.',
+        'race, gender, non-fiction', FALSE),
+    ('Do Androids Dream of Electric Cars?: Public Transit in the Age of Google, Uber, and Elon Musk', 'James Wilt',
+        'Public transportation is in crisis. Through an assessment of the history of automobility in North America, the "three revolutions" in automotive transportation, as well as the current work of committed people advocating for a different way forward, James Wilt imagines what public transit should look like in order to be green and equitable',
+        'non-fiction, technology, urbanism, cities', TRUE),
+    ('Too Smart: How Digital Capitalism is Extracting Data, Controlling Our Lives, and Taking Over the World', 'Jathan Sadowski',
+        'Who benefits from smart technology? Whose interests are served when we trade our personal data for convenience and connectivity?',
+        'non-fiction', FALSE),
+    ('Bit Tyrants: The Political Economy of Silicon Valley', 'Rob Larson',
+        'In this highly unauthorized account of the Big 5s origins, Rob Larson sets the record straight, and in the process shreds every focus-grouped bromide about corporate benevolence he could get his hands on.',
+        'non-fiction, business, technology, politics, economics', TRUE),
+    ('Capitalism, Technology, Labor: Socialist Register Reader Vol 2 (Socialist Register Reader, 2)', 'Greg Albo',
+        'As we enter what some term the "fourth industrial revolution" and both mainstream commentators and the left grapple with the implications of rapid technological development, this volume is a timely and crucial resource for those looking to build a political strategy attentive to sweeping changes in how we produce goods and live our lives.',
+        'non-fiction', TRUE),
+    ('Race After Technology: Abolitionist Tools for the New Jim Code', 'Ruha Banjamin',
+        'From everyday apps to complex algorithms, Ruha Benjamin cuts through tech-industry hype to understand how emerging technologies can reinforce White supremacy and deepen social inequity.',
+        'nonfiction, race, social justice, sociology, politics', TRUE),
+    ('Weapons of Math Destruction: How Big Data Increases Inequality and Threatens Democracy', 'Cathy O''Neil',
+        'We live in the age of the algorithm. Increasingly, the decisions that affect our lives--where we go to school, whether we can get a job or a loan, how much we pay for health insurance--are being made not by humans, but by machines. Data scientist Cathy ONeil reveals the mathematical models being used today are unregulated and uncontestable, even when theyre wrong.',
+        'non-fiction, science, technology, mathematics, politics', TRUE),
+    ('Automating Inequality: How High-Tech Tools Profile, Police, and Punish the Poor', 'Virginia Eubanks',
+        'In Automating Inequality, Virginia Eubanks systematically investigates the impacts of data mining, policy algorithms, and predictive risk models on poor and working-class people in America.',
+        'non-fiction, technology, politics, social justics, sociology', FALSE);
 
 # basic values >> pwds with the $2b$10$ bycrypt prefix ...
 INSERT INTO user (username, email, pwd, bio) VALUES
