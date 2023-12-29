@@ -23,14 +23,24 @@
     </nav>
     <div class="line"></div>
     <div class="text">
-        <h1>Humans</h1>
+        <h1>Humans & Community Lists</h1>
         <div class="inside">
-            # TODO : place in table and show what communites they are members of
-            <ul>
-                <% for (let i = 0; i < users.length; i++) { %>
-                    <li><%= users[i].username %></li>
-                <% } %>
-            </ul>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Community Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(user => { %>
+                        <tr>
+                            <td><%= user.username %></td>
+                            <td><%= user.comName %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
         </div>
 
     </div>    

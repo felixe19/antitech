@@ -28,9 +28,11 @@
                 <h1>Community</h1>
                 <div class="inside">
                     <h2>Topics</h2>
-                    <p>
-                        these are the topics
-                    </p>
+                    <ul>
+                        <% community.forEach(topic => { %>
+                            <li><%= topic.comName %></li>
+                        <% }); %>
+                    </ul>
                 </div>
                 <div class="text">
                     <h2>Membership</h2>

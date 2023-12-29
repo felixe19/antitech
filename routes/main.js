@@ -28,13 +28,12 @@ module.exports = function (app, appData) {
     app.get('/blog', function (req, res) {
         console.log("Currently on: BLOG page....");
         let sqlquery = `
-        SELECT blog.title, blog.content, user.username AS author, community.comName AS community, blog.datePosted
-        FROM blog
-        INNER JOIN user ON blog.author = user.userID
-        INNER JOIN community ON blog.communityID = community.communityID
-        ORDER BY blog.datePosted DESC
+            SELECT blog.title, blog.content, user.username AS author, community.comName AS community, blog.datePosted
+            FROM blog
+            INNER JOIN user ON blog.author = user.userID
+            INNER JOIN community ON blog.communityID = community.communityID
+            ORDER BY blog.datePosted DESC
         `;
-
         db.query(sqlquery, (err, results) => {
             if (err){
                 throw err;
@@ -73,7 +72,13 @@ module.exports = function (app, appData) {
     // TODO: include search and/or filter results page...
     app.get('/list', redirectLogin, function(req, res) {
         console.log("Currently on: LIST page....")
-        db.query('SELECT username FROM user', (err, results) => {
+        let sqlquery = `
+            SELECT u.userID, u.username, c.communityID, c.comName
+            FROM user u
+            LEFT JOIN blog b ON u.userID = b.author
+            LEFT JOIN community c ON b.communityID = c.communityID
+        `;
+        db.query(sqlquery, (err, results) => {
             if (err)
             {
                 throw err;
@@ -86,7 +91,15 @@ module.exports = function (app, appData) {
     // register page
     app.get('/register', function (req,res) {
         console.log("Currently on: REGISTER page....")
-        res.render('register.ejs', appData);                                            
+        if (req.session.userId) {
+            const userEmail = req.session.userId;
+            const alertMessage = `You are already registered and signed in as ${userEmail}!`;
+            // res.redirect('/');
+            // this url query will display an alert letting the user know they're logged in as ___ like the above line
+            res.redirect(`/?alertMessage=${encodeURIComponent(alertMessage)}`);
+        } else {
+            res.render('register.ejs', appData);                                           
+        }         
     });
     // post-registering..                                                                                            
     app.post('/registered', [
