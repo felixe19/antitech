@@ -25,13 +25,28 @@
 
     <div class="blurb">
         <h1>Blog Posts</h1>
-    </div>
-    <!-- something here to filter -->
-        NULL
-    </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Content</th>
+                    <th>Author</th>
+                    <th>Community</th>
+                    <th>Date Posted</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% blogs.forEach(blog => { %>
+                    <tr>
+                        <td><%= blog.title %></td>
+                        <td><%= blog.content %></td>
+                        <td><%= blog.author %></td>
+                        <td><%= blog.community %></td>
+                        <td><%= blog.datePosted %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
     <br>
-    <div class="blurb">
-        NULL
-    </div>
 </body>
 </html>

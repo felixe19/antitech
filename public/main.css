@@ -110,9 +110,9 @@ p {
     margin-bottom: 40px;
 }
 
-tr {
+/* tr {
     text-transform: capitalize;
-}
+} */
 
 .errormessage {
     color:red;

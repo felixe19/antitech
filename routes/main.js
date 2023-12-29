@@ -24,14 +24,31 @@ module.exports = function (app, appData) {
     });
     // blog
     app.get('/blog', function (req, res) {
-        console.log("Currently on: BLOG page....")
-        res.render('blog.ejs', appData)
+        console.log("Currently on: BLOG page....");
+        let sqlquery = `
+        SELECT blog.title, blog.content, user.username AS author, community.comName AS community, blog.datePosted
+        FROM blog
+        INNER JOIN user ON blog.author = user.userID
+        INNER JOIN community ON blog.communityID = community.communityID
+        `;
+
+        db.query(sqlquery, (err, results) => {
+            if (err){
+                throw err;
+                res.redirect('./');
+            }
+            let newData = Object.assign({}, appData, {blogs:results});
+            res.render('blog.ejs', newData);
+        });
     });
     // community page
     app.get('/community', function(req, res) {
         console.log("Currently on: COMMUNITY page....")
         db.query('SELECT * FROM community', (err, results) => {
-            if (err) throw err;
+            if (err) {
+                throw err;
+                res.redirect('./')
+            }
             let newData = Object.assign({}, appData, {community:results});    
             res.render('community.ejs', newData);
         });
