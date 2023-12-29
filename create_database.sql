@@ -59,15 +59,6 @@ CREATE TABLE blog (
     FOREIGN KEY (communityID) REFERENCES community(communityID)
 );
 
-# many to many : users in communities
-CREATE TABLE communityMembership (
-    userID INT,
-    communityID INT,
-    membershipDate DATE,
-    FOREIGN KEY (userID) REFERENCES user(userID),
-    FOREIGN KEY (communityID) REFERENCES community(communityID)
-);
-
 # basic values - TODO : ADD INFO > use full table -- DONE!
 INSERT INTO book (title, author, descript, genre, isAvailable)
 VALUES

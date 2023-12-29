@@ -22,7 +22,15 @@
         </ul>
     </nav>
     <div class="line"></div>
-
+    <!-- IF USER IS SIGNED IN AND HITTING SIGN IN BUTTON -->
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const alertMessage = urlParams.get('alertMessage');
+        if (alertMessage) {
+            alert(alertMessage);
+        }
+    </script>
+    
     <div class="blurb">
         <div class="text">
             <div class="inside">

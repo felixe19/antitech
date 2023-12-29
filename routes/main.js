@@ -32,6 +32,7 @@ module.exports = function (app, appData) {
         FROM blog
         INNER JOIN user ON blog.author = user.userID
         INNER JOIN community ON blog.communityID = community.communityID
+        ORDER BY blog.datePosted DESC
         `;
 
         db.query(sqlquery, (err, results) => {
@@ -135,7 +136,15 @@ module.exports = function (app, appData) {
     // sign-in page
     app.get('/sign-in', function(req, res) {
         console.log("Currently on: SIGN-IN page....")
-        res.render('sign-in.ejs', appData);            
+        if (req.session.userId) {
+            const userEmail = req.session.userId;
+            const alertMessage = `You are already signed in as ${userEmail}!`;
+            // res.redirect('/');
+            // this url query will display an alert letting the user know they're logged in as ___ like the above line
+            res.redirect(`/?alertMessage=${encodeURIComponent(alertMessage)}`);
+        } else {
+            res.render('sign-in.ejs', appData);            
+        }         
     });
     // signed in page
     app.post('/signed-in', [
@@ -212,5 +221,96 @@ module.exports = function (app, appData) {
             res.render('add-post.ejs', newData);
         });
     });
+
+    app.post('/added', [
+            check('title').notEmpty().withMessage('Title cannot be empty'),
+            check('content').notEmpty().withMessage('Content field cannot be empty'),
+        ], function (req, res) {
+        // --- begin post ---
+        console.log('Currently performing ADD POST operations...');
+
+        const errors = validationResult(req);
+        req.sanitize(req.body.title);
+        req.sanitize(req.body.content);
+        req.sanitize(req.body.community);
+        req.sanitize(req.body.newCommunity);
+
+        if (!errors.isEmpty()) {
+            res.redirect('./');
+        } else {
+            // NOTE: BLOG FOREIGN KEY USERID IS INT, NOT EMAIL > RETRIEVE ID
+            const email = req.session.userId;
+
+            let sqlID = 'select userID FROM user WHERE email = ?';
+            db.query(sqlID, [email], (err, result) => {
+                if (err) {
+                    console.error('Error retrieving user ID:', err);
+                    res.redirect('./');
+
+                } else {
+                    const userID = result[0].userID; // get the userID
     
-}
+                    // create the post with the retrieved ID
+                    if (req.body.community) {
+                        const new_post = {
+                            title: req.body.title,
+                            content: req.body.content,
+                            author: userID,
+                            communityID: req.body.community,
+                            datePosted: new Date()
+                        };
+    
+                        // insert new post
+                        db.query('INSERT INTO blog SET ?', new_post, (ins_err, ins_res) => {
+                            if (ins_err) {
+                                console.log('Error inserting blog to database: ', ins_err);
+                                return res.status(500).send('Error addding new blog post...');
+                            }
+                            // log the success
+                            const result = 'Hello ' + req.body.username + ' your post was added successfully! '+'<a href='+'./'+'>Home</a>';
+                            // send response
+                            res.send(result);
+                        }); // end db
+                    } // === END EXISTING COMMUNITY ===
+    
+                    // new community instance
+                    if (req.body.newCommunity) {
+                        const new_comm = {
+                            comName: req.body.newCommunity
+                        };
+            
+                        // Insert new community into the database
+                        const sqlInsertNewCommunity = 'INSERT INTO community (comName) VALUES (?)';
+                        db.query(sqlInsertNewCommunity, [req.body.newCommunity], (err, result) => {
+                            if (err) {
+                                console.error('Error inserting new community:', err);
+                                // Handle the error appropriately
+                            } else {
+                                const new_post = {
+                                    title: req.body.title,
+                                    content: req.body.content,
+                                    author: userID,
+                                    communityID: result.insertId, // auto-generated ID of the new community
+                                    datePosted: new Date()
+                                };
+                                // insert new post
+                                db.query('INSERT INTO blog SET ?', new_post, (ins_err, ins_res) => {
+                                    if (ins_err) {
+                                        console.log('Error inserting blog to database: ', ins_err);
+                                        return res.status(500).send('Error addding new blog post...');
+                                    }
+                                    // log the success
+                                    const result = 'Hello ' + req.session.userID + ' your post was added successfully! Click to view: '+'<a href='+'./'+'>blog</a>';
+                                    // send response
+                                    res.send(result);
+                                }); // end db
+                            }
+                        });
+                    } // === END NEW COMMUNITY ===
+                }
+            }); // END USERID SQL
+        } // end else statement
+    
+    }); // END POST ADDED
+    
+} // end module exports::  == FINAL END ==
