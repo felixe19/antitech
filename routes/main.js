@@ -3,7 +3,9 @@ module.exports = function (app, appData) {
     const bcrypt = require('bcrypt');
     // redirection after authentication
     const redirectLogin = (req, res, next) => {
-        if (!req.session.userId ) {
+        if (!req.session.userId && (req.originalUrl !== './sign-in' || req.originalUrl !== './signed-in')) {
+            // this will save url before signin to send user back to this page, now signed
+            req.session.returnTo = req.originalUrl;
             res.redirect('./sign-in')
         } else { next (); }
     }
@@ -139,7 +141,7 @@ module.exports = function (app, appData) {
     app.post('/signed-in', [
         check('email').isEmail().withMessage('Email must be valid.'),
         check('pwd').notEmpty().withMessage('Username cannot be empty.')
-    ],function(req, res) {
+    ], function (req, res) {
         console.log("Currently doing SIGN-IN OPERATIONS (/signed-in)....");
         let sqlquery = 'SELECT pwd FROM user WHERE email = ?';
         req.sanitize(req.body.email);
@@ -153,12 +155,12 @@ module.exports = function (app, appData) {
                     console.error('Internal error:', err);
                     return res.status(500).send('Internal error occurred.');
                 }
-                // result > 0  means that a matchinh password found for that email
+                // result > 0  means that a matching password found for that email
                 if (result.length > 0) {
-                // assign the hashed password to address error...
-                const hashedPassword = result[0].pwd;
-                // move bcrypt function here
-                    bcrypt.compare(req.body.pwd, hashedPassword, function(comp_err, comp_res) {
+                    // assign the hashed password to address error...
+                    const hashedPassword = result[0].pwd;
+                    // move bcrypt function here
+                    bcrypt.compare(req.body.pwd, hashedPassword, function (comp_err, comp_res) {
                         if (comp_err) {
                             // error: comparing passwords > db side
                             console.error('Error comparing passwords:', compareErr);
@@ -166,11 +168,17 @@ module.exports = function (app, appData) {
                         } else if (comp_res) {
                             // passwords match: user auth OK !
                             req.session.userId = req.body.email;
-                            res.redirect('./');
-                            // res.send({message:'Authentication successful!', result: result});
+                            // redirection logic for already authenticated users
+                            if (req.session.returnTo) {
+                                const redirectTo = req.session.returnTo;
+                                delete req.session.returnTo;
+                                return res.redirect(redirectTo);
+                            } else {
+                                return res.redirect('./'); // Redirect to home if no returnTo path
+                            }
                         } else {
                             // passwords do not match: user auth FAIL -> 401 auth error
-                            res.staus(401).send('Incorrect password');
+                            res.status(401).send('Incorrect password');
                         }
                     });
                 } else {
@@ -180,6 +188,7 @@ module.exports = function (app, appData) {
             });
         }
     });
+    
     // signout page
     app.get('/sign-out', redirectLogin, (req,res) => {
         req.session.destroy(err => {
@@ -188,6 +197,11 @@ module.exports = function (app, appData) {
             }
             res.send('you are now logged out. <a href='+'./'+'>Home</a>');
         })
+    });
+    // add post page
+    app.get('/add-post', redirectLogin, function(req, res) {
+        console.log("Currently on: ADD POST page....")
+        res.render('add-post.ejs', appData);
     });
     
 }
