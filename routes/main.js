@@ -1,4 +1,3 @@
-// TODO: BLOG PAGE MISSING HAHAHAH
 module.exports = function (app, appData) {
     // bcrypt to avoid missing or undefined err
     const bcrypt = require('bcrypt');
@@ -31,9 +30,9 @@ module.exports = function (app, appData) {
     // community page
     app.get('/community', function(req, res) {
         console.log("Currently on: COMMUNITY page....")
-        db.query('SELECT username FROM user', (err, results) => {
+        db.query('SELECT * FROM community', (err, results) => {
             if (err) throw err;
-            let newData = Object.assign({}, appData, {users:results});    
+            let newData = Object.assign({}, appData, {community:results});    
             res.render('community.ejs', newData);
         });
     });
@@ -61,7 +60,7 @@ module.exports = function (app, appData) {
                 res.redirect('./');
             };
             let newData = Object.assign({}, appData, {users:results});  
-            res.render('community.ejs', newData);
+            res.render('list.ejs', newData);
         });
     });
     // register page
@@ -127,6 +126,7 @@ module.exports = function (app, appData) {
         console.log("Currently doing SIGN-IN OPERATIONS (/signed-in)....");
         let sqlquery = 'SELECT pwd FROM user WHERE email = ?';
         req.sanitize(req.body.email);
+        const errors = validationResult(req); // forgot to define here
         if (!errors.isEmpty()) {
             res.redirect('./register');
         } else {
