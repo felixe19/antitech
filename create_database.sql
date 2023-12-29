@@ -108,3 +108,27 @@ INSERT INTO user (username, email, pwd, bio) VALUES
     ('sakur4_', 'sakura@example.com', '$2b$10$LKRP57T9U0GRzbpCz8p5VucOqRmE6ng6CTn/gvGjK9DK5f8QQzF16', 'hi im sakura.x');
 
 # TODO : finish tables >> blog & community
+INSERT into community (comName, descript) VALUES
+    ('Podcasts', 'Recommendations and discussions of podcasts that handle themes of technology and social in/justice.'),
+    ('Youtube Resources', 'Youtube videos that the community thinks are relevant to Big Tech.'),
+    ('Films', 'Films about Big Tech and social in/justice.'),
+    ('External Communities', 'Outside resources and sites or communities that our members are also a part of.');
+
+INSERT into blog (title, content, author, communityID, datePosted) VALUES
+    ('Check out this episode about BLM and Big Tech!!', 'Pod <There Are No Girls on the Internet> shared an episode that is a callout (kinda) to how Big Tech is happy to chime in for these causes in a way that white supremacy power structures arent challenged. Copy & paste the link: https://open.spotify.com/episode/5ZZNskPjHZs2GShhIYRvFw?si=PjuFaKhIRZqBgEPq4CB8gw',
+    4, 1, NOW()),
+    ('Another great episode from TANGOTI', '<There Are No Girls on the Internet> just posted about disinformation. Specifically, who benefits from false narratives. It also dives into antiblackness within the Latine community as well! Link here: https://open.spotify.com/episode/5k5oIuOd6xCygg34uDou1m?si=OBl4quiXSDuslnYRPDi0ag',
+    3, 1, NOW()),
+    ('Found today: Big Tech and the Future of Capitalism!', 'Still havent had the time to listen but Im rushing to finish up my work to listen. Heres the link: https://soundcloud.com/wort-fm/big-tech-and-the-future-of-capitalism',
+    1, 1, NOW()),
+    ('Silicon Valley Native - Great video on housing crisis!!!!!', 'Can Big Tech Curb a Housing Crisis It Helped Cause? Personally, no. People see our home as a place to make quick money and leave -- theres zero incentive to make communities better for those that actually stay!! Link: https://youtu.be/kJH4wSW_X5A?si=52EzU91ChQOJUkjh',
+    3, 2, NOW()),
+    ('Interview with Wendy Liu!', 'Wendy is the author of Abolish Silicon Valley--highly recommend! Link here: https://www.youtube.com/live/sBR5rZPwjsk?si=J0zXXKZZg_ruzDNk',
+    2, 2, NOW()),
+    ('Coded Bias', 'Has anyone seen this? It is about artificial intelligence and the protection of civil liberties; how algorithms push discrimination. Really liked it!',
+    1, 3, NOW()),
+    ('The Great Hack', 'Just saw this doc about Cambridge Analytica, Facebook, Brexit and Donald Trump... Insane!!', 4, 3, NOW()),
+    ('#NoTechForICE', 'Has anyone checked out No Tech for ICE yet? Awesome resource about technology and immigration. Genuinely left me asking what things like visibility even mean in companies like Amazon. What does being a Latino in these spaces mean if they just oppress our own communities...?',
+    1, 4, NOW()),
+    ('PB Resources', 'Awesome resource for police brutality/BLM information. Started by a computing student at NYU!! I think she might have a TEDTalk, too? Shes great!',
+    4, 4, NOW());
