@@ -68,7 +68,7 @@ app.engine('html', ejs.renderFile);
 
 // Define our data
 var appData = {
-    appName: "NULL"
+    appName: "Antitech Connect"
 }
 
 // Requires the main.js file inside the routes folder passing in the Express app and data as arguments.  All the routes will go in this file
