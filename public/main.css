@@ -171,4 +171,11 @@ a:visited {
 a:hover{
     color: #FE9000;
 }
-  
+
+select[name="community"] {
+    width: 200px; /* Adjust the width as needed */
+}
+
+input[type="text"][name="newCommunity"] {
+    width: 250px; /* Adjust the width as needed */
+}

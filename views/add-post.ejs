@@ -25,10 +25,52 @@
     <div class="container">
         <div class="blurb">
             <div class="text">
-                Big Tech and the Department of Defense prey on young STEM talent. We are not the intellectual property of any government or corporation.
-                <br><br>
                 <h1>Add post</h1>
                 <div class="inside">
+                    <form method="POST" action="/add-post" onsubmit="return validateForm()">
+                        <p>Title: <input type="text" name="title" placeholder="Enter title" /></p>
+                        <p>Content: <textarea name="content" rows="4" cols="50" placeholder="Enter content"></textarea></p>
+                        <!-- userId = session Id that is logged: REMEMBER MUST BE LOGGED IN  -->
+                        <input type="hidden" name="author" value="<%= userId %>" />
+                        <p>
+                            Select Existing Community:
+                            <select name="community">
+                                <option value="" selected disabled>-- Choose One --</option>
+                                <!-- passed from server: community ID and names when adding new post to db -->
+                                <% community.forEach(community => { %>
+                                    <option value="<%= community.communityID %>"><%= community.comName %></option>
+                                <% }); %>
+                            </select>
+                        </p>
+                        <p>or</p>
+                        <!-- to allow user to create a new community with new blog post-->
+                        <p>Start a New Community: <input type="text" name="newCommunity" placeholder="Enter new community name" /></p>
+                        <!-- date value is passed in NOW() on the js side -->
+                        <input type="submit" value="Submit" />
+                    </form>
+
+                    <!-- script to ensure no empty text in content/title and no overlap community -->
+                    <script>
+                        function validateForm() {
+                            const title = document.getElementById('title').value.trim();
+                            const content = document.getElementById('content').value.trim();
+                            const community = document.getElementById('community').value.trim();
+                            const newCommunity = document.getElementById('newCommunity').value.trim();
+                    
+                            if (title === '' || content === '') {
+                                alert('Title and content cannot be empty!');
+                                return false;
+                            }
+                    
+                            if (community !== '' && newCommunity !== '') {
+                                alert('Select a community OR create a new one, not both!');
+                                return false;
+                            }
+                    
+                            return true;
+                        }
+                    </script>
+
                 </div> 
 
             </div>

@@ -200,8 +200,17 @@ module.exports = function (app, appData) {
     });
     // add post page
     app.get('/add-post', redirectLogin, function(req, res) {
-        console.log("Currently on: ADD POST page....")
-        res.render('add-post.ejs', appData);
+        console.log("Currently on: ADD POST page....");
+        db.query('SELECT * FROM community', (err, results) => {
+            if (err) {
+                throw err;
+                res.redirect('./')
+            }
+            // FIXED: PASS USERID TO STOP ERR THROWING
+            let newData = Object.assign({}, appData, {community:results, userId: req.session.userId});
+            console.log(newData);
+            res.render('add-post.ejs', newData);
+        });
     });
     
 }
